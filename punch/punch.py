@@ -1,9 +1,11 @@
 import requests
 from loguru import logger
-from datetime import datetime
+import warnings
 from bs4 import BeautifulSoup
 import os
 import time
+import json
+import datetime as dt
 
 os.environ["https_proxy"] = "http://128.110.10.186:8080"
 os.environ["CURL_CA_BUNDLE"] = ""
@@ -110,8 +112,8 @@ def punch_selenium(user_id: str, user_pwd: str) -> bool:
     driver.get(URL)
     time.sleep(3)
 
-    driver.switch_to.frame("main")
-    time.sleep(3)
+    # driver.switch_to.frame("main")
+    # time.sleep(3)
     e_user_id = driver.find_element_by_id(id_="txtUserID")
     e_pwd = driver.find_element_by_id(id_="txtUserPwd")
     e_button = driver.find_element_by_tag_name("button")
@@ -123,3 +125,21 @@ def punch_selenium(user_id: str, user_pwd: str) -> bool:
     result = "刷卡完成" in driver.page_source
     driver.close()
     return result
+
+
+def check_active():
+    info = {}
+    url = "https://github.com/elsonly/punch_bot/wiki"
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        resp = requests.get(url)
+    soup = BeautifulSoup(resp.content, features="lxml")
+    for x in soup.findAll("p"):
+        if "active" in x.text:
+            info = json.loads(x.text)
+            break
+
+    in_active = info.get("active", False)
+    in_date = dt.datetime.fromisoformat(info.get("date", "1900-01-01")).date()
+
+    return in_active and (in_date == get_tpe_datetime().date())

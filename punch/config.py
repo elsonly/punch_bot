@@ -11,7 +11,6 @@ class BaseConfig:
     USER_ID = os.environ.get("USER_ID")
     USER_PASSWORD = os.environ.get("USER_PASSWORD")
     USER_NAME = os.environ.get("USER_NAME")
-    HACKMD_PUNCH_URL = os.environ.get("HACKMD_PUNCH_URL")
 
 
 CONFIG = BaseConfig()
