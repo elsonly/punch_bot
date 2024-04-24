@@ -42,7 +42,7 @@ def punch_job(debug: bool = False):
 if __name__ == "__main__":
     import schedule
 
-    # punch_job(debug=True)
+    punch_job(debug=True)
     for schedule_time in ["07:30:00", "17:30:00"]:
         schedule.every().monday.at(schedule_time).do(punch_job)
         schedule.every().tuesday.at(schedule_time).do(punch_job)
