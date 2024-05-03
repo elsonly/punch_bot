@@ -10,6 +10,8 @@ from punch.config import CONFIG
 
 
 def punch_job(debug: bool = False):
+    if get_tpe_datetime().weekday() > 4:
+        return
     active = False
     while (
         debug
@@ -40,19 +42,32 @@ def punch_job(debug: bool = False):
 
 
 if __name__ == "__main__":
-    import schedule
+    from punch.scheduler import Scheduler, Schedule
 
+    scheduler = Scheduler()
+    jobs = [
+        Schedule(
+            name="punch",
+            job=punch_job,
+            prev_dt=None,
+            next_dt=get_tpe_datetime().replace(
+                hour=7, minute=30, second=0, microsecond=0
+            ),
+            interval=dt.timedelta(days=1),
+        ),
+        Schedule(
+            name="punch",
+            job=punch_job,
+            prev_dt=None,
+            next_dt=get_tpe_datetime().replace(
+                hour=17, minute=30, second=0, microsecond=0
+            ),
+            interval=dt.timedelta(days=1),
+        ),
+    ]
+    for schedule in jobs:
+        scheduler.register(schedule)
+
+    
     punch_job(debug=True)
-    for schedule_time in ["07:30:00", "17:30:00"]:
-        schedule.every().monday.at(schedule_time).do(punch_job)
-        schedule.every().tuesday.at(schedule_time).do(punch_job)
-        schedule.every().wednesday.at(schedule_time).do(punch_job)
-        schedule.every().thursday.at(schedule_time).do(punch_job)
-        schedule.every().friday.at(schedule_time).do(punch_job)
-
-    for _job in schedule.get_jobs():
-        logger.info({_job})
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    scheduler.run()
