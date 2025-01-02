@@ -17,14 +17,17 @@ def punch_job(debug: bool = False):
         debug
         or (
             get_tpe_datetime().time() >= dt.time(hour=7, minute=30, second=0)
-            and get_tpe_datetime().time() < dt.time(hour=10, minute=0, second=0)
+            and get_tpe_datetime().time() < dt.time(hour=9, minute=0, second=0)
         )
         or (
             get_tpe_datetime().time() >= dt.time(hour=17, minute=30, second=0)
             and get_tpe_datetime().time() < dt.time(hour=19, minute=0, second=0)
         )
     ):
-        active = check_active()
+        try:
+            active = check_active()
+        except:
+            pass
         if active:
             break
         logger.debug("punch not active")
