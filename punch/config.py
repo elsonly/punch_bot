@@ -11,6 +11,7 @@ class BaseConfig:
     USER_ID = os.environ.get("USER_ID")
     USER_PASSWORD = os.environ.get("USER_PASSWORD")
     USER_NAME = os.environ.get("USER_NAME")
+    CHECK_INTERVAL = os.environ.get("CHECK_INTERVAL", 60)
 
 
 CONFIG = BaseConfig()

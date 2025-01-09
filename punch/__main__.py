@@ -31,7 +31,7 @@ def punch_job(debug: bool = False):
         if active:
             break
         logger.debug("punch not active")
-        time.sleep(60)
+        time.sleep(CONFIG.CHECK_INTERVAL)
 
     if active:
         if not debug:
