@@ -127,7 +127,7 @@ def punch_selenium(user_id: str, user_pwd: str) -> bool:
     return result
 
 
-def check_active():
+def check_active() -> bool:
     info = {}
     url = "https://github.com/elsonly/punch_bot/wiki"
     with warnings.catch_warnings():
@@ -140,6 +140,8 @@ def check_active():
             break
 
     in_active = info.get("active", False)
+    return in_active
+
     in_date = dt.datetime.fromisoformat(info.get("date", "1900-01-01")).date()
 
     return in_active and (in_date == get_tpe_datetime().date())
