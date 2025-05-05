@@ -9,10 +9,11 @@ from punch.utils import get_tpe_datetime
 from punch.config import CONFIG
 
 
-def punch_job(debug: bool = False):
+def punch_job(debug: bool = False, max_retry: int = 5):
     if get_tpe_datetime().weekday() > 4:
         return
     active = False
+    retry_counter = 0
     while (
         debug
         or (
@@ -27,7 +28,10 @@ def punch_job(debug: bool = False):
         try:
             active = check_active()
         except:
-            pass
+            retry_counter += 1
+            if retry_counter >= max_retry:
+                print("max retries exceeded")
+                active = True
         if active:
             break
         logger.debug("punch not active")
@@ -35,7 +39,15 @@ def punch_job(debug: bool = False):
 
     if active:
         if not debug:
-            time.sleep(random.randint(0, 300))
+            interval = int(
+                get_tpe_datetime()
+                .replace(hour=8, minute=30, second=0, microsecond=0)
+                .timestamp()
+                - time.time()
+            )
+            if interval > 0:
+                time.sleep(random.randint(0, interval))
+
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             result = punch_selenium(CONFIG.USER_ID, CONFIG.USER_PASSWORD)
@@ -71,6 +83,5 @@ if __name__ == "__main__":
     for schedule in jobs:
         scheduler.register(schedule)
 
-    
     punch_job(debug=True)
     scheduler.run()
