@@ -7,9 +7,9 @@ import time
 import json
 import datetime as dt
 
-os.environ["https_proxy"] = "http://128.110.10.186:8080"
-os.environ["CURL_CA_BUNDLE"] = ""
-os.environ["REQUESTS_CA_BUNDLE"] = ""
+# os.environ["https_proxy"] = "http://128.110.10.186:8080"
+# os.environ["CURL_CA_BUNDLE"] = ""
+# os.environ["REQUESTS_CA_BUNDLE"] = ""
 
 from selenium import webdriver
 import chromedriver_autoinstaller
@@ -138,7 +138,6 @@ def check_active() -> bool:
         if "active" in x.text:
             info = json.loads(x.text)
             break
-
     in_active = info.get("active", False)
     return in_active
 

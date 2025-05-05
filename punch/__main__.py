@@ -9,7 +9,7 @@ from punch.utils import get_tpe_datetime
 from punch.config import CONFIG
 
 
-def punch_job(debug: bool = False, max_retry: int = 5):
+def punch_job(debug: bool = False, max_retry: int = 3):
     if get_tpe_datetime().weekday() > 4:
         return
     active = False
@@ -27,7 +27,8 @@ def punch_job(debug: bool = False, max_retry: int = 5):
     ):
         try:
             active = check_active()
-        except:
+        except Exception as e:
+            print(e)
             retry_counter += 1
             if retry_counter >= max_retry:
                 print("max retries exceeded")
