@@ -40,14 +40,21 @@ def punch_job(debug: bool = False, max_retry: int = 3):
 
     if active:
         if not debug:
-            interval = int(
-                get_tpe_datetime()
-                .replace(hour=8, minute=30, second=0, microsecond=0)
-                .timestamp()
-                - time.time()
-            )
-            if interval > 0:
+            if get_tpe_datetime() < get_tpe_datetime().replace(hour=8, minute=30, second=0, microsecond=0):
+                interval = int(
+                    get_tpe_datetime()
+                    .replace(hour=8, minute=30, second=0, microsecond=0)
+                    .timestamp()
+                    - time.time()
+                )
                 time.sleep(random.randint(0, interval))
+            elif (
+                get_tpe_datetime() >= get_tpe_datetime().replace(hour=8, minute=30, second=0, microsecond=0)
+                and get_tpe_datetime() < get_tpe_datetime().replace(hour=17, minute=30, second=0, microsecond=0)
+            ):
+                time.sleep(random.randint(0, 5))
+            else:
+                time.sleep(random.randint(0, 1800))
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -76,7 +83,7 @@ if __name__ == "__main__":
             job=punch_job,
             prev_dt=None,
             next_dt=get_tpe_datetime().replace(
-                hour=17, minute=30, second=0, microsecond=0
+                hour=17, minute=31, second=0, microsecond=0
             ),
             interval=dt.timedelta(days=1),
         ),
