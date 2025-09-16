@@ -2,3 +2,5 @@ dist
 __pycache__
 .env
 Pipfile
+.python-version
+.venv
