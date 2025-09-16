@@ -2,16 +2,13 @@ import requests
 from loguru import logger
 import warnings
 from bs4 import BeautifulSoup
-import os
 import time
 import json
 import datetime as dt
 
-# os.environ["https_proxy"] = "http://128.110.10.186:8080"
-# os.environ["CURL_CA_BUNDLE"] = ""
-# os.environ["REQUESTS_CA_BUNDLE"] = ""
-
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.edge.service import Service
 import chromedriver_autoinstaller
 
 from punch.utils import get_tpe_datetime
@@ -106,17 +103,18 @@ def punch_selenium(user_id: str, user_pwd: str) -> bool:
     # custom User-Agent header
     # options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
     # driver = webdriver.Chrome(options=options)
+    service = Service(executable_path="./dist/msedgedriver.exe")
     options = webdriver.EdgeOptions()
-    driver = webdriver.Edge(executable_path="./dist/msedgedriver.exe", options=options)
+    driver = webdriver.Edge(service=service, options=options)
     # get
     driver.get(URL)
     time.sleep(3)
 
     # driver.switch_to.frame("main")
     # time.sleep(3)
-    e_user_id = driver.find_element_by_id(id_="txtUserID")
-    e_pwd = driver.find_element_by_id(id_="txtUserPwd")
-    e_button = driver.find_element_by_tag_name("button")
+    e_user_id = driver.find_element(by=By.ID, value="txtUserID")
+    e_pwd = driver.find_element(by=By.ID, value="txtUserPwd")
+    e_button = driver.find_element(by=By.TAG_NAME, value="button")
 
     e_user_id.send_keys(user_id)
     e_pwd.send_keys(user_pwd)
