@@ -21,7 +21,7 @@ def punch_job(debug: bool = False, max_retry: int = 3):
             and get_tpe_datetime().time() < dt.time(hour=9, minute=0, second=0)
         )
         or (
-            get_tpe_datetime().time() >= dt.time(hour=17, minute=30, second=0)
+            get_tpe_datetime().time() >= dt.time(hour=17, minute=0, second=0)
             and get_tpe_datetime().time() < dt.time(hour=19, minute=0, second=0)
         )
     ):
@@ -40,17 +40,17 @@ def punch_job(debug: bool = False, max_retry: int = 3):
 
     if active:
         if not debug:
-            if get_tpe_datetime() < get_tpe_datetime().replace(hour=8, minute=30, second=0, microsecond=0):
+            if get_tpe_datetime() < get_tpe_datetime().replace(hour=8, minute=0, second=0, microsecond=0):
                 interval = int(
                     get_tpe_datetime()
-                    .replace(hour=8, minute=30, second=0, microsecond=0)
+                    .replace(hour=8, minute=0, second=0, microsecond=0)
                     .timestamp()
                     - time.time()
                 )
                 time.sleep(random.randint(0, interval))
             elif (
-                get_tpe_datetime() >= get_tpe_datetime().replace(hour=8, minute=30, second=0, microsecond=0)
-                and get_tpe_datetime() < get_tpe_datetime().replace(hour=17, minute=30, second=0, microsecond=0)
+                get_tpe_datetime() >= get_tpe_datetime().replace(hour=8, minute=0, second=0, microsecond=0)
+                and get_tpe_datetime() < get_tpe_datetime().replace(hour=17, minute=0, second=0, microsecond=0)
             ):
                 time.sleep(random.randint(0, 5))
             else:
